@@ -1,15 +1,2 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:GodSim/Assets/Scripts/NoiseExpressions/ComputeShaderSettings.cs.meta
 guid: 5ead4c45e9838aa4c9400937916799f8
-========
-guid: 84268e8eae8854a4f805c81797f95ce6
->>>>>>>> 48893730c0ed37441ce35b0e17ab3c453b3b9460:GodSim/Assets/Scripts/NoiseMap/BasicMap.cs.meta
-MonoImporter:
-  externalObjects: {}
-  serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
-  icon: {instanceID: 0}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
