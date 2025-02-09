@@ -1,0 +1,115 @@
+#pragma kernel EvaluateNoise2D
+
+StructuredBuffer<int> _Perm;
+StructuredBuffer<float> _InputPointsX;
+StructuredBuffer<float> _InputPointsY;
+RWStructuredBuffer<float> _OutputValues;
+uint _LaunchSize;
+uint _StartIndex;
+float2 _Offset;
+
+float F2 = 0.5 * (sqrt(3.0) - 1.0);
+float G2 = (3.0 - sqrt(3.0)) / 6.0;
+
+int FastFloor(float x)
+{
+    return x > 0 ? (int)x : (int)x - 1;
+}
+
+float Dot(float2 g, float x, float y)
+{
+    return g.x * x + g.y * y;
+}
+
+float2 Grad(int hash)
+{
+    int h = hash & 7;
+    float2 grad = float2((h < 4) ? 1.0 : 0.0, (h < 4) ? 0.0 : 1.0);
+    if ((h & 1) != 0) grad.x = -grad.x;
+    if ((h & 2) != 0) grad.y = -grad.y;
+    return grad;
+}
+
+float Evaluate(float x, float y, int index)
+{
+    float s = (x + y) * F2;
+    int i = FastFloor(x + s);
+    int j = FastFloor(y + s);
+
+    float t = (i + j) * G2;
+    float x0 = x - (i - t);
+    float y0 = y - (j - t);
+
+    int i1, j1;
+    if (x0 > y0)
+    {
+        i1 = 1;
+        j1 = 0;
+    }
+    else
+    {
+        i1 = 0;
+        j1 = 1;
+    }
+
+    float x1 = x0 - i1 + G2;
+    float y1 = y0 - j1 + G2;
+    float x2 = x0 - 1.0 + 2 * G2;
+    float y2 = y0 - 1.0 + 2 * G2;
+
+    int ii = i & 255;
+    int jj = j & 255;
+    
+    int gi0 = _Perm[ii + _Perm[jj]];
+    int gi1 = _Perm[ii + i1 + _Perm[jj + j1]];
+    int gi2 = _Perm[ii + 1 + _Perm[jj + 1]];
+    
+    // Noise contributions from the three corners
+    float n0, n1, n2;
+
+    // Calculate the contribution from the three corners
+    float t0 = 0.5 - x0 * x0 - y0 * y0;
+    if (t0 < 0)
+        n0 = 0.0;
+    else
+    {
+        t0 *= t0;
+        n0 = t0 * t0 * Dot(Grad(gi0), x0, y0);
+    }
+
+    float t1 = 0.5 - x1 * x1 - y1 * y1;
+    if (t1 < 0)
+        n1 = 0.0;
+    else
+    {
+        t1 *= t1;
+        n1 = t1 * t1 * Dot(Grad(gi1), x1, y1);
+    }
+
+    float t2 = 0.5 - x2 * x2 - y2 * y2;
+    if (t2 < 0)
+        n2 = 0.0;
+    else
+    {
+        t2 *= t2;
+        n2 = t2 * t2 * Dot(Grad(gi2), x2, y2);
+    }
+
+    // Add contributions from each corner to get the final noise value.
+    // The result is scaled to return values in the interval [0,1].
+    return 70.0 * (n0 + n1 + n2);
+}
+
+[numthreads(1024, 1, 1)]
+void EvaluateNoise2D(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        const float x = _InputPointsX[index] + _Offset.x;
+        const float y = _InputPointsY[index] + _Offset.y;
+        _OutputValues[index] = Evaluate(x, y, index);
+    }
+}
+
+

@@ -1,0 +1,23 @@
+{
+  "name": "com.sbaier.noise-expressions",
+  "version": "1.0.0",
+  "displayName": "Unity Noise Expressions",
+  "description": "Compute shader based noise expressions for the Unity engine",
+  "unity": "6000.0",
+  "unityRelease": "",
+  "documentationUrl": "https://github.com/BlackLambert/unity-noise-expressions",
+  "changelogUrl": "https://github.com/BlackLambert/unity-noise-expressions/releases/tag/v1.0.0",
+  "licensesUrl": "",
+  "dependencies": {
+    "nuget.moq": "1.0.0"
+ },
+ "keywords": [
+    "noise expressions",
+    "compute shader"
+  ],
+  "author": {
+    "name": "Sebastian Baier",
+    "email": "sebastian.baier93@hotmail.de",
+    "url": ""
+  }
+}

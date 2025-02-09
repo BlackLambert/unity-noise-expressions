@@ -1,0 +1,16 @@
+#pragma kernel CopyBuffer
+
+StructuredBuffer<float> _SourceBuffer;
+RWStructuredBuffer<float> _DestinationBuffer;
+uint _LaunchSize;
+uint _StartIndex;
+
+[numthreads(1024, 1, 1)]
+void CopyBuffer(uint3 id : SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        _DestinationBuffer[index] = _SourceBuffer[index];
+    }
+}

@@ -1,0 +1,218 @@
+#include "OperatorUtility.cginc"
+
+StructuredBuffer<float> _InputA;
+StructuredBuffer<float> _InputB;
+RWStructuredBuffer<float> _Output;
+uint _LaunchSize;
+uint _StartIndex;
+int2 _InputDimensions;
+
+#pragma kernel AdditionOperation
+[numthreads(1024, 1, 1)]
+void AdditionOperation(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a + b;
+    }
+}
+
+#pragma kernel SubtractionOperation
+[numthreads(1024, 1, 1)]
+void SubtractionOperation(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a - b;
+    }
+}
+
+#pragma kernel MultiplyOperation
+[numthreads(1024, 1, 1)]
+void MultiplyOperation(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a * b;
+    }
+}
+
+#pragma kernel DivideOperation
+[numthreads(1024, 1, 1)]
+void DivideOperation(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a / b;
+    }
+}
+
+#pragma kernel MinOperation
+[numthreads(1024, 1, 1)]
+void MinOperation(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = min(a, b);
+    }
+}
+
+#pragma kernel MaxOperation
+[numthreads(1024, 1, 1)]
+void MaxOperation(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = max(a, b);
+    }
+}
+
+#pragma kernel Equals
+[numthreads(1024, 1, 1)]
+void Equals(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a == b;
+    }
+}
+
+#pragma kernel NotEquals
+[numthreads(1024, 1, 1)]
+void NotEquals(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a != b;
+    }
+}
+
+#pragma kernel LargerEquals
+[numthreads(1024, 1, 1)]
+void LargerEquals(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a >= b;
+    }
+}
+
+#pragma kernel LowerEquals
+[numthreads(1024, 1, 1)]
+void LowerEquals(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a <= b;
+    }
+}
+
+#pragma kernel Lower
+[numthreads(1024, 1, 1)]
+void Lower(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a < b;
+    }
+}
+
+#pragma kernel Larger
+[numthreads(1024, 1, 1)]
+void Larger(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a > b;
+    }
+}
+
+#pragma kernel Or
+[numthreads(1024, 1, 1)]
+void Or(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a || b;
+    }
+}
+
+#pragma kernel And
+[numthreads(1024, 1, 1)]
+void And(uint3 id : SV_DispatchThreadID )
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        _Output[index] = a && b;
+    }
+}

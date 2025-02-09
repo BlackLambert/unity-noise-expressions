@@ -1,0 +1,43 @@
+#include "OperatorUtility.cginc"
+
+StructuredBuffer<float> _InputA;
+StructuredBuffer<float> _InputB;
+StructuredBuffer<float> _InputC;
+RWStructuredBuffer<float> _Output;
+uint _LaunchSize;
+uint _StartIndex;
+int3 _InputDimensions;
+
+#pragma kernel ClampOperation
+[numthreads(1024, 1, 1)]
+void ClampOperation(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        uint indexC = resolveIndex(index, _InputDimensions.z);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        float c = _InputC[indexC];
+        _Output[index] = clamp(a, b, c);
+    }
+}
+
+#pragma kernel Conditional
+[numthreads(1024, 1, 1)]
+void Conditional(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        uint indexA = resolveIndex(index, _InputDimensions.x);
+        uint indexB = resolveIndex(index, _InputDimensions.y);
+        uint indexC = resolveIndex(index, _InputDimensions.z);
+        float a = _InputA[indexA];
+        float b = _InputB[indexB];
+        float c = _InputC[indexC];
+        _Output[index] = a ? b : c;
+    }
+}

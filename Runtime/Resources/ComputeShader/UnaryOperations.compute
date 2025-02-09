@@ -1,0 +1,61 @@
+StructuredBuffer<float> _Input;
+RWStructuredBuffer<float> _Output;
+uint _LaunchSize;
+uint _StartIndex;
+
+#pragma kernel NegationOperation
+[numthreads(1024, 1, 1)]
+void NegationOperation(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        _Output[index] = -_Input[index];
+    }
+}
+
+#pragma kernel Abs
+[numthreads(1024, 1, 1)]
+void Abs(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        _Output[index] = abs(_Input[index]);
+    }
+}
+
+#pragma kernel EaseInOut
+[numthreads(1024, 1, 1)]
+void EaseInOut(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        const float t = _Input[index];
+        _Output[index] = t * t * (3.0 - 2.0 * t);
+    }
+}
+
+#pragma kernel Not
+[numthreads(1024, 1, 1)]
+void Not(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        _Output[index] = !_Input[index];
+    }
+}
+
+#pragma kernel Floor
+[numthreads(1024, 1, 1)]
+void Floor(uint3 id: SV_DispatchThreadID)
+{
+    const uint index = id.x + _StartIndex;
+    if (index < _LaunchSize)
+    {
+        float x = _Input[index];
+        _Output[index] = x >= 0 ? (int)x : (int)x - 1;
+    }
+}
